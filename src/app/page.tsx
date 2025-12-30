@@ -69,7 +69,7 @@ function Line(property: LineProperty) {
 
 
 export default function TestGround() {
-    // array of sphere properties (propeties)
+    // array of sphere properties (propeties)i
     const [rootNodesProperties, setRootNode] = useState<NodeProperty[]>( [] );
 
     const [leafNodesProperties, setLeafNode] = useState<NodeProperty[]>( [] );
@@ -119,7 +119,7 @@ export default function TestGround() {
                     newRootNode.position[2] + childOffset[2],
                 ],
                 geometry: [1.5, 32, 32],
-                label: "RM" + companyRevenue,
+                label: "RM" + ((i % 2) ? companyRevenue : companyExpenses),
                 parentNode: newRootNode,
                 childNodes: [],
                 offsetFromParent: [...childOffset]
@@ -250,12 +250,16 @@ export default function TestGround() {
                         onDragEnd={() => setDragging((false))}
                         // onDrag={(matrix) => updateChildNodes(matrix, nodeProperties)}
                     >
-                        <mesh 
-                            position={nodeProperties.position}
-                            ref={(elem) => (leafNodePosRefs.current[nodeProperties.id] = elem)} // for referencing to update its position
-                        >
-                            <sphereGeometry args={nodeProperties.geometry} />
-                            <meshStandardMaterial color="#543958" />
+                        <mesh position={nodeProperties.position} ref={(elem) => (leafNodePosRefs.current[nodeProperties.id] = elem)}>
+                            <mesh onPointerEnter={() => setDragging(true)} onPointerLeave={() => setDragging(false)}>
+                                <sphereGeometry args={nodeProperties.geometry} />
+                                <meshStandardMaterial color="#543958" />
+                            </mesh>
+                            <Billboard>
+                                <Text position={[0, 3.5, 0]} fontSize={2} anchorX="center" anchorY="middle">
+                                    {nodeProperties.label}
+                                </Text>
+                            </Billboard>
                         </mesh>
                     </DragControls>
                     ))
@@ -268,7 +272,7 @@ export default function TestGround() {
                     )
                 )}
 
-                <OrbitControls enablePan={false} enableRotate={!isDragging}/>
+                <OrbitControls enablePan={!false} enableRotate={!isDragging}/>
             </Canvas>
         </div>
     );
